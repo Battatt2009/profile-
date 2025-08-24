@@ -1,1 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cyber Froly - Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+<!-- Firebase App (core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<!-- Firebase Database -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: linear-gradient(180deg, #000, #111);
+    color: #0ff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 15px;
+    overflow-x: hidden;
+  }
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: #111;
+    border-radius: 20px;
+    padding: 30px 40px;
+    box-shadow: 0 0 50px #0ff66aa8;
+    animation: fadeIn 1.5s ease forwards;
+  }
 
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .profile-pic {
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: url('https://i.ibb.co/TBsNCW3F/3694.jpg') no-repeat center/cover;
+    box-shadow:
+      0 0 25px #0ff,
+      inset 0 0 60px #0ff;
+    animation: spin 25s linear infinite;
+  }
+
+  @keyframes spin {
+    from {transform: rotateY(0deg);}
+    to {transform: rotateY(360deg);}
+  }
+
+  .intro {
+    text-align: center;
+    flex: 1 1 320px;
+  }
+
+  .intro h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+    animation: colorShift 5s infinite alternate ease-in-out;
+    background: linear-gradient(90deg, #0ff, #0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+  }
+
+  @keyframes colorShift {
+    0% {background-position: 0%;}
+    100% {background-position: 100%;}
+  }
+
+  .intro .roles {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #0ff;
+    position: relative;
+    overflow: hidden;
+    height: 40px;
+  }
+
+  /* typing effect */
+  .typing-text {
+    display: inline-block;
+    white-space: nowrap;
+    border-right: 3px solid #0ff;
+    animation: typing 3.5s steps(20) infinite, blink 0.7s step-end infinite;
+    overflow: hidden;
+  }
+
+  @keyframes typing {
+    0% {width: 0;}
+    50% {width: 100%;}
+    100% {width: 0;}
+  }
+  @keyframes blink {
+    50% {border-color: transparent;}
+    100% {border-color: #0ff;}
+  }
+
+  .intro p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #ccc;
+    margin-bottom: 10px;
+  }
+
+  /* Sections */
+  section {
+    margin-top: 35px;
+  }
+
+  section h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #0ff;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+  }
+
+  .about-list, .help-list {
+    list-style: none;
+    padding-left: 15px;
+    color: #0ff;
+    font-weight: 600;
+  }
+  .about-list li, .help-list li {
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .about-list li::before, .help-list li::before {
+    content: "→";
+    position: absolute;
+    left: -20px;
+    color: #0ff;
+    font-weight: 900;
+  }
+
+  /* Buttons for Services */
+  .service-buttons {
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .service-buttons button {
+    background: linear-gradient(135deg, #00ffffaa, #0088ffaa);
+    border: none;
+    border-radius: 15px;
+    color: #000;
+    font-weight: 700;
+    padding: 12px 25px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00ffffaa;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    perspective: 1000px;
+  }
+
+  .service-buttons button:hover {
+    background: linear-gradient(135deg, #00ffff, #00aaff);
+    box-shadow: 0 0 30px #00ffff;
+    transform: rotateY(15deg) scale(1.05);
+  }
+
+  /* Contact Info */
+  .contact-info {
+    margin-top: 25px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #0ff;
+    letter-spacing: 1.2px;
+  }
+
+  .contact-info a {
+    color: #0ff;
+    text-decoration: none;
+  }
+
+  .contact-info a:hover {
+    text-decoration: underline;
+  }
+
+    /* Comment section */
+  .comments {
+    margin-top: 40px;p
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .comments h3 {
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: #0ff;
+    border-bottom: 2px solid #0ff;
+    padding-bottom: 8px;
+  }
+
+  .comments input, .comments textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    resize: vertical;
+  }
+
+  .comments textarea {
+    min-height: 90px;
+  }
+
+  .comments button {
+    background: #0ff;
+    color: #000;
+    font-weight: 700;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #0ff;
+    transition: background 0.3s ease;
+  }
+  .comments button:hover {
+    background: #0cc;
+  }
+
+  .comment-list {
+    margin-top: 25px;
+  }
+
+  .comment-item {
+    background: #222;
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    color: #0ff;
+    position: relative;
+    font-weight: 600;
+  }
+
+  .comment-item strong {
+    font-weight: 900;
+  }
+
+  /* Comment action buttons */
+  .comment-actions {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .comment-actions button {
+    background: transparent;
+    border: none;
+    color: #0ff;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+
+  .comment-actions button:hover {
+    color: #0cc;
+  }
+
+  /* Login styles */
+  #loginOverlay {
+    position: fixed;
+    top:0; left:0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+  }
+  #loginBox {
+    background: #111;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px #0ff;
+    text-align: center;
+    width: 360px;
+    position: relative;
+    perspective: 1000px;
+  }
+  .login-photo {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: url('https://i.ibb.co/nNTtYfgx/6231.jpg') no-repeat center/cover;
+    margin: 0 auto 30px;
+    box-shadow: 0 0 20px #0ff, inset 0 0 50px #0ff;
+    animation: rotate360 20s linear infinite;
+  }
+  @keyframes rotate360 {
+    0% {transform: rotateY(0deg);}
+    100% {transform: rotateY(360deg);}
+  }
+  
+  /* Google Sign-In Button Styling */
+  .google-signin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: #757575;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+    margin-top: 15px;
+    width: 100%;
+  }
+  
+  .google-signin:hover {
+    box-shadow: 0 0 15px #0ff;
+    transform: translateZ(10px);
+  }
+  
+  .google-icon {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .user-info {
+    margin-top: 20px;
+    color: #0ff;
+    font-weight: 600;
+  }
+  
+  .user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  /* Anonymous login button */
+  .anonymous-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #00ffff, #0088ff);
+    color: #000;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+    border: none;
+    margin-top: 15px;
+    width: 100%;
+  }
+  
+  .anonymous-login:hover {
+    box-shadow: 0 0 15px #0ff;
+    transform: translateZ(10px);
+  }
+  
+  .anonymous-icon {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+  <div id="loginBox">
+    <div class="login-photo" aria-label="Profile Photo"></div>
+    <div class="user-info" id="userInfo" style="display: none;">
+      <img id="userPhoto" src="" alt="User Photo">
+      <span id="userName"></span>
+    </div>
+    <div class="google-signin" id="googleSignIn">
+      <img class="google-icon" src="https://ibb.co/qFjSdQCG" alt="Google Logo">
+      Sign in with Google
+    </div>
+    <div class="anonymous-login" id="anonymousSignIn">
+      <img class="anonymous-icon" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Anonymous Icon">
+      Continue Anonymously
+    </div>
+    <button class="login-btn" onclick="signOut()" style="display: none; margin-top: 15px;" id="signOutBtn">Sign Out</button>
+  </div>
+</div>
+
+<div class="container" id="mainContainer" style="display:none;">
+
+<header>
+  <div class="profile-pic" aria-label="Profile Photo"></div>
+  <div class="intro">
+    <h1>Hi, it's Cyber Froly</h1>
+    <h2>I'm a</h2>
+    <div class="roles"><span class="typing-text">Developer & Programmer</span></div>
+    <p>I'm a Cyber Security student from Sri Lanka passionate about digital defense and ethical hacking.</p>
+  </div>
+</header>
+
+<section>
+  <h2>About</h2>
+  <ul class="about-list">
+    <li>Focused on Cyber Security, penetration testing and open-source intelligence.</li>
+    <li>Building sleek, mobile-friendly, and animated web projects.</li>
+    <li>Passionate about ethical hacking and digital safety.</li>
+    <li>Enjoy automating bots and managing movie groups.</li>
+    <li>Always learning and sharing knowledge.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Help</h2>
+  <ul class="help-list">
+    <li>Technical support and advice for digital security.</li>
+    <li>Guidance on ethical hacking and programming.</li>
+    <li>Film upload and movie group management assistance.</li>
+    <li>Open to questions and collaboration.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Services & Contact</h2>
+  <div class="service-buttons">
+    <button onclick="window.open('https://wa.me/94743491027','_blank')">📞 Contact</button>
+    <button onclick="window.open('https://chat.whatsapp.com/Ev8zLlQpUtJFoWLN7mRcoq','_blank')">🎬 Movie Group</button>
+    <button onclick="window.open('https://chat.whatsapp.com/IIrvI0Yejzl184rJCkFTR2','_blank')">🔞 18+ Movie Group</button>
+    <button onclick="window.open('https://chat.whatsapp.com/Ds9j0YSg9lNG3UaK1S16Bo','_blank')">📺 TV Series Group</button>
+  </div>
+  <div class="contact-info">
+    📧 Email: <a href="mailto:Pjayasundara67@gmail.com">Pjayasundara67@gmail.com</a>
+  </div>
+</section>
+
+<section class="comments">
+  <h3>Leave a Comment</h3>
+  
+   <input type="text" id="commentName" placeholder="Your Name" />
+    <input type="text" id="commentText" placeholder="Your Comment..."></input>
+  <button onclick="saveComment()">Submit</button>
+  <div class="comment-list" id="commentList"></div>
+  
+</section>
+</section>
+
+</div>
+
+<script>
+  // Firebase configuration - Replace with your own config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDEl2AolrKXQChDZPzlAoLBl_3MxiLAH7s",
+    authDomain: "prot1-cb1eb.firebaseapp.com",
+    databaseURL: "https://prot1-cb1eb-default-rtdb.firebaseio.com",
+    projectId: "prot1-cb1eb",
+    storageBucket: "prot1-cb1eb.firebasestorage.app",
+    messagingSenderId: "932255849784",
+    appId: "1:932255849784:web:08641ef9ba3bc4f719b5cd"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Initialize Firebase Authentication and Database
+  const auth = firebase.auth();
+  const database = firebase.database();
+  
+  // Google Sign In
+  document.getElementById('googleSignIn').addEventListener('click', () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        // User signed in successfully
+        console.log('User signed in:', result.user);
+      })
+      .catch((error) => {
+        console.error('Error during sign in:', error);
+        alert('Sign in failed: ' + error.message);
+      });
+  });
+
+  // Anonymous Sign In
+  document.getElementById('anonymousSignIn').addEventListener('click', () => {
+    auth.signInAnonymously()
+      .then(() => {
+        // Signed in anonymously
+        console.log('Signed in anonymously');
+      })
+      .catch((error) => {
+        console.error('Error during anonymous sign in:', error);
+        alert('Anonymous sign in failed: ' + error.message);
+      });
+  });
+  
+  // Sign Out function
+  function signOut() {
+    auth.signOut()
+      .then(() => {
+        console.log('User signed out');
+      })
+      .catch((error) => {
+        console.error('Error during sign out:', error);
+      });
+  }
+  
+  // Auth state observer
+  auth.onAuthStateChanged((user) => {
+    const loginOverlay = document.getElementById('loginOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+    const userInfo = document.getElementById('userInfo');
+    const userName = document.getElementById('userName');
+    const userPhoto = document.getElementById('userPhoto');
+    const googleSignIn = document.getElementById('googleSignIn');
+    const anonymousSignIn = document.getElementById('anonymousSignIn');
+    const signOutBtn = document.getElementById('signOutBtn');
+    
+    if (user) {
+      // User is signed in
+      loginOverlay.style.display = 'none';
+      mainContainer.style.display = 'block';
+      
+      // Show user info in login box for next time
+      userInfo.style.display = 'block';
+      
+      if (user.isAnonymous) {
+        userName.textContent = 'Anonymous User';
+        userPhoto.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+      } else {
+        userName.textContent = user.displayName || user.email;
+        userPhoto.src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+      }
+      
+      googleSignIn.style.display = 'none';
+      anonymousSignIn.style.display = 'none';
+      signOutBtn.style.display = 'block';
+      
+      // Load comments from Firebase
+      loadComments();
+    } else {
+      // User is signed out
+      loginOverlay.style.display = 'flex';
+      mainContainer.style.display = 'none';
+      
+      // Reset user info in login box
+      userInfo.style.display = 'none';
+      googleSignIn.style.display = 'flex';
+      anonymousSignIn.style.display = 'flex';
+      signOutBtn.style.display = 'none';
+    }
+  });
+
+  // Comments with Firebase integration
+  function saveComment() {
+    const user = auth.currentUser;
+    if (!user) {
+      alert('Please sign in to comment');
+      return;
+    }
+    
+    const name = document.getElementById('commentName').value.trim();
+    const text = document.getElementById('commentText').value.trim();
+    
+    if(!name || !text) {
+      alert('Please fill both fields!');
+      return;
+    }
+    
+    // Save comment to Firebase
+    const commentData = {
+      name: name,
+      text: text,
+      timestamp: Date.now(),
+      userId: user.uid
+    };
+    
+    const newCommentKey = database.ref().child('comments').push().key;
+    const updates = {};
+    updates['/comments/' + newCommentKey] = commentData;
+    
+    database.ref().update(updates)
+      .then(() => {
+        document.getElementById('commentName').value = '';
+        document.getElementById('commentText').value = '';
+      })
+      .catch((error) => {
+        console.error('Error saving comment:', error);
+        alert('Error saving comment: ' + error.message);
+      });
+  }
+
+  function loadComments() {
+    database.ref('comments').orderByChild('timestamp').once('value')
+      .then((snapshot) => {
+        const comments = [];
+        snapshot.forEach((childSnapshot) => {
+          comments.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
+        });
+        renderComments(comments.reverse()); // Show newest first
+      })
+      .catch((error) => {
+        console.error('Error loading comments:', error);
+      });
+  }
+
+  function renderComments(comments) {
+    const list = document.getElementById('commentList');
+    list.innerHTML = '';
+    
+    if (comments.length === 0) {
+      list.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+      return;
+    }
+    
+    comments.forEach((comment) => {
+      const div = document.createElement('div');
+      div.className = 'comment-item';
+      div.innerHTML = `<strong>${comment.name}</strong>: ${comment.text}
+        <div class="comment-actions">
+          <button onclick="editComment('${comment.id}')" title="Edit">&#9998;</button>
+          <button onclick="deleteComment('${comment.id}')" title="Delete">&#10006;</button>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function deleteComment(commentId) {
+    const user = auth.currentUser;
+    if (!user) return;
+    
+    // Check if user owns this comment (for simplicity, we'll allow deletion of any comment)
+    if(confirm('Delete this comment?')) {
+      database.ref('comments/' + commentId).remove()
+        .then(() => {
+          loadComments(); // Reload comments
+        })
+        .catch((error) => {
+          console.error('Error deleting comment:', error);
+        });
+    }
+  }
+
+  function editComment(commentId) {
+    const user = auth.currentUser;
+    if (!user) return;
+    
+    database.ref('comments/' + commentId).once('value')
+      .then((snapshot) => {
+        const comment = snapshot.val();
+        const newText = prompt('Edit your comment:', comment.text);
+        if(newText !== null && newText.trim() !== '') {
+          database.ref('comments/' + commentId).update({
+            text: newText.trim()
+          })
+          .then(() => {
+            loadComments(); // Reload comments
+          })
+          .catch((error) => {
+            console.error('Error updating comment:', error);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading comment:', error);
+      });
+  }
+</script>
+
+</body>
+</html>
